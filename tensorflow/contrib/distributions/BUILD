@@ -68,6 +68,7 @@ cuda_py_test(
         "//tensorflow/python:platform_test",
         "//tensorflow/python:random_ops",
     ],
+    tags = ["no_pip"],
 )
 
 cuda_py_test(
@@ -349,9 +350,43 @@ cuda_py_test(
 )
 
 cuda_py_test(
-    name = "mvn_test",
+    name = "mvn_diag_test",
     size = "small",
-    srcs = ["python/kernel_tests/mvn_test.py"],
+    srcs = ["python/kernel_tests/mvn_diag_test.py"],
+    additional_deps = [
+        ":distributions_py",
+        "//third_party/py/numpy",
+        "//tensorflow/python:array_ops",
+        "//tensorflow/python:client_testlib",
+        "//tensorflow/python:framework_for_generated_wrappers",
+        "//tensorflow/python:framework_test_lib",
+        "//tensorflow/python:math_ops",
+        "//tensorflow/python:nn_ops",
+        "//tensorflow/python:platform_test",
+    ],
+)
+
+cuda_py_test(
+    name = "mvn_diag_plus_low_rank_test",
+    size = "medium",
+    srcs = ["python/kernel_tests/mvn_diag_plus_low_rank_test.py"],
+    additional_deps = [
+        ":distributions_py",
+        "//third_party/py/numpy",
+        "//tensorflow/python:array_ops",
+        "//tensorflow/python:client_testlib",
+        "//tensorflow/python:framework_for_generated_wrappers",
+        "//tensorflow/python:framework_test_lib",
+        "//tensorflow/python:math_ops",
+        "//tensorflow/python:nn_ops",
+        "//tensorflow/python:platform_test",
+    ],
+)
+
+cuda_py_test(
+    name = "mvn_tril_test",
+    size = "small",
+    srcs = ["python/kernel_tests/mvn_tril_test.py"],
     additional_deps = [
         ":distributions_py",
         "//third_party/py/numpy",
@@ -619,6 +654,7 @@ cuda_py_test(
         "//tensorflow/python:math_ops",
         "//tensorflow/python:platform_test",
     ],
+    tags = ["no_pip"],
 )
 
 cuda_py_test(
@@ -657,7 +693,7 @@ cuda_py_test(
 
 cuda_py_test(
     name = "shape_test",
-    size = "small",
+    size = "medium",
     srcs = ["python/kernel_tests/shape_test.py"],
     additional_deps = [
         ":distributions_py",

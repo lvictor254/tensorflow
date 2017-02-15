@@ -36,11 +36,17 @@ def check_version(bazel_version):
           native.bazel_version, bazel_version))
   pass
 
+def _repos_are_siblings():
+  return Label("@foo//bar").workspace_root.startswith("../")
+
 # Temporary workaround to support including TensorFlow as a submodule until this
 # use-case is supported in the next Bazel release.
 def _temp_workaround_http_archive_impl(repo_ctx):
    repo_ctx.template("BUILD", repo_ctx.attr.build_file,
-                     {"%ws%": repo_ctx.attr.repository}, False)
+                     {
+                         "%prefix%" : ".." if _repos_are_siblings() else "external",
+                         "%ws%": repo_ctx.attr.repository
+                     }, False)
    repo_ctx.download_and_extract(repo_ctx.attr.urls, "", repo_ctx.attr.sha256,
                                  "", repo_ctx.attr.strip_prefix)
 
@@ -67,11 +73,11 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
   native.new_http_archive(
       name = "eigen_archive",
       urls = [
-          "http://bazel-mirror.storage.googleapis.com/bitbucket.org/eigen/eigen/get/60578b474802.tar.gz",
-          "https://bitbucket.org/eigen/eigen/get/60578b474802.tar.gz",
+          "http://bazel-mirror.storage.googleapis.com/bitbucket.org/eigen/eigen/get/27b59f255aab.tar.gz",
+          "https://bitbucket.org/eigen/eigen/get/27b59f255aab.tar.gz",
       ],
-      sha256 = "7527cda827aff351981ebd910012e16be4d899c28a9ae7f143ae60e7f3f7b83d",
-      strip_prefix = "eigen-eigen-60578b474802",
+      sha256 = "f371ec98779e61749dac1f9b01034f3d38ad21c9536f92bc7e74e5f5390c9998",
+      strip_prefix = "eigen-eigen-27b59f255aab",
       build_file = str(Label("//third_party:eigen.BUILD")),
   )
 
@@ -214,11 +220,11 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
   native.http_archive(
       name = "protobuf",
       urls = [
-          "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/008b5a228b37c054f46ba478ccafa5e855cb16db.tar.gz",
-          "https://github.com/google/protobuf/archive/008b5a228b37c054f46ba478ccafa5e855cb16db.tar.gz",
+          "http://bazel-mirror.storage.googleapis.com/github.com/google/protobuf/archive/ef927cc428db7bf41d3a593a16a8f1a0fe6306c5.tar.gz",
+          "https://github.com/google/protobuf/archive/ef927cc428db7bf41d3a593a16a8f1a0fe6306c5.tar.gz",
       ],
-      sha256 = "2737ad055eb8a9bc63ed068e32c4ea280b62d8236578cb4d4120eb5543f759ab",
-      strip_prefix = "protobuf-008b5a228b37c054f46ba478ccafa5e855cb16db",
+      sha256 = "8813a4ab27f7c61565d0db17d69236b4ec0b1404371efc728f15079b85e457ca",
+      strip_prefix = "protobuf-ef927cc428db7bf41d3a593a16a8f1a0fe6306c5",
   )
 
   native.new_http_archive(
@@ -270,7 +276,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
       build_file = str(Label("//third_party:swig.BUILD")),
   )
 
-  native.new_http_archive(
+  temp_workaround_http_archive(
       name = "curl",
       sha256 = "ff3e80c1ca6a068428726cd7dd19037a47cc538ce58ef61c59587191039b2ca6",
       urls = [
@@ -401,9 +407,9 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
 
   native.new_http_archive(
       name = "nccl_archive",
-      url = "https://github.com/NVIDIA/nccl/archive/2a974f5ca2aa12b178046b2206b43f1fd69d9fae.tar.gz",
-      sha256 = "d6aa1a3f20ae85358890d9a96f49c51a75baa1d3af3598501f29ff9ef8a3107d",
-      strip_prefix = "nccl-2a974f5ca2aa12b178046b2206b43f1fd69d9fae",
+      url = "https://github.com/nvidia/nccl/archive/024d1e267845f2ed06f3e2e42476d50f04a00ee6.tar.gz",
+      sha256 = "6787f0eed88d52ee8e32956fa4947d92c139da469f1d8e311c307f27d641118e",
+      strip_prefix = "nccl-024d1e267845f2ed06f3e2e42476d50f04a00ee6",
       build_file = str(Label("//third_party:nccl.BUILD")),
   )
 
