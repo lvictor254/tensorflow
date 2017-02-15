@@ -132,6 +132,10 @@ Status GrpcServer::Init() {
         return errors::InvalidArgument(
             "Could not parse port for local server from \"", iter->second,
             "\"");
+      } else if (!IsValidIpAddr(hostname_port[0])) {
+        return errors::InvalidArgument(
+            "Invalid ip address for local server from \"", iter->second,
+            "\"");
       } else {
         break;
       }
